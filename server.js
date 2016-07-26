@@ -8,27 +8,21 @@ app.use(express.static(__dirname + '/css'));
 app.use(express.static(__dirname + '/images'));
 app.use(express.static(__dirname + '/js'));
 
-var sockets = [];
-
-// Format: { "roomName":[hostUser, 'otherUser1', 'otherUser2'], }
-var rooms = [];
+//var todo = io.sockets.clients();
+//var usethese = io.sockets.clients('room'); // all users from room `room`
 
 function connect(socket){
 	//console.log('User ' + socket.id + ' connected!');
-	sockets.push(socket);
 }
 
 function disconnect(socket){
 	//console.log('User ' + socket.id + ' disconnected!');
-	var index = sockets.indexOf(socket);
-	sockets.splice(index, 1);
-	// if last in room remove room
 }
 
 function joinRoom(socket, room){
-	socket.join(room);
 	console.log(socket.id + ' joined ' + room);
-	socket.emit();
+	socket.join(room);
+	socket.emit('joinRoomResponse', room);
 }
 
 // Register events for a new socket
@@ -38,8 +32,15 @@ io.on('connection', (socket) => {
 	socket.on('joinRoomRequest', (room) => {joinRoom(socket, room);});
 });
 
+// TODO figure out rooms and url
+
+// Every page not the root
+//app.get('/*', function(req, res){
+//	res.sendFile(__dirname + '/game.html');
+//});
+
 // Root page
-app.get('/*', function(req, res){
+app.get('/', function(req, res){
 	res.sendFile(__dirname + '/setup.html');
 });
 

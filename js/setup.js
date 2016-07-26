@@ -8,3 +8,7 @@ button.addEventListener('click', () => {
 	socket.emit('joinRoomRequest', room.value);
 	button.disabled = true;
 });
+
+socket.on('joinRoomResponse', (room) => {
+	console.log('Joined ' + room);
+});
